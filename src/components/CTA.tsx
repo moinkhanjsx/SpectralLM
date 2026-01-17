@@ -1,6 +1,7 @@
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { trackCustomEvent } from '../utils/performanceMonitor';
 
 export default function CTA() {
   const [ref, isIntersecting] = useIntersectionObserver({ threshold: 0.1 });
@@ -13,11 +14,17 @@ export default function CTA() {
           Join the enterprises already accelerating discovery with custom SLMs. Let's discuss how we can build the perfect model for your needs.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-          <button className="bg-gradient-to-r from-blue-500 to-cyan-500 px-10 py-4 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition text-black font-semibold flex items-center justify-center gap-2">
+          <button 
+            className="bg-gradient-to-r from-blue-500 to-cyan-500 px-10 py-4 rounded-lg font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition text-black font-semibold flex items-center justify-center gap-2"
+            onClick={() => trackCustomEvent('cta_schedule_consultation', { section: 'cta', button: 'schedule_consultation' })}
+          >
             <FontAwesomeIcon icon={faEnvelope} className="text-black" />
             Schedule Consultation
           </button>
-          <button className="border border-slate-500 px-10 py-4 rounded-lg font-semibold hover:bg-slate-800 transition flex items-center justify-center gap-2">
+          <button 
+            className="border border-slate-500 px-10 py-4 rounded-lg font-semibold hover:bg-slate-800 transition flex items-center justify-center gap-2"
+            onClick={() => trackCustomEvent('cta_view_case_studies', { section: 'cta', button: 'view_case_studies' })}
+          >
             View Case Studies
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />

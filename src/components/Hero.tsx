@@ -1,4 +1,5 @@
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
+import { trackCustomEvent } from '../utils/performanceMonitor';
 
 export default function Hero() {
   const [ref, isIntersecting] = useIntersectionObserver({ threshold: 0.1 });
@@ -15,13 +16,19 @@ export default function Hero() {
         Purpose-built Small Language Models that solve complex problems with precision. From pharmaceuticals to defense tech — AI tailored to your domain.
       </div>
       <div className="flex flex-col sm:flex-row gap-4 justify-center text-xl border-b border-slate-800">
-        <button className="bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-blue-500/50 transition text-black flex items-center justify-center gap-2">
+        <button 
+          className="bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-blue-500/50 transition text-black flex items-center justify-center gap-2"
+          onClick={() => trackCustomEvent('hero_request_demo', { section: 'hero', button: 'request_demo' })}
+        >
           Request Demo
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
         </button>
-        <button className="border border-slate-500 px-6 py-3 rounded-lg font-bold hover:bg-slate-800 transition">
+        <button 
+          className="border border-slate-500 px-6 py-3 rounded-lg font-bold hover:bg-slate-800 transition"
+          onClick={() => trackCustomEvent('hero_explore_solutions', { section: 'hero', button: 'explore_solutions' })}
+        >
           Explore Solutions
         </button>
 
