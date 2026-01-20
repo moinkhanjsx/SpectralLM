@@ -17,7 +17,7 @@ export default function Navigation() {
         <div className="flex h-16 items-center">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 shrink-0 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-500 text-black font-bold flex items-center justify-center text-lg shadow-lg">
+            <div className="h-8 w-8 shrink-0 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-400 text-black font-bold flex items-center justify-center text-lg shadow-lg">
               SL
             </div>
             <span className="text-2xl font-semibold tracking-tight bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
