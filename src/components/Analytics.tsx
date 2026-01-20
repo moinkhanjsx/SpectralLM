@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { performanceMonitor } from '../utils/performanceMonitor';
 import type { PerformanceMetrics } from '../utils/performanceMonitor';
+import { PERFORMANCE_THRESHOLDS } from '../constants';
 
 export default function Analytics() {
   const [metrics, setMetrics] = useState<Partial<PerformanceMetrics>>({});
@@ -8,18 +9,20 @@ export default function Analytics() {
 
   useEffect(() => {
     // Only show analytics in development or with a special query param
-    if (import.meta.env.DEV || window.location.search.includes('analytics=true')) {
-      setIsVisible(true);
-      const updateMetrics = () => {
-        setMetrics(performanceMonitor.getMetrics());
-      };
-      
-      // Update metrics every 2 seconds
-      const interval = setInterval(updateMetrics, 2000);
-      updateMetrics(); // Initial update
-      
-      return () => clearInterval(interval);
-    }
+    const shouldShow = import.meta.env.DEV || window.location.search.includes('analytics=true');
+    setIsVisible(shouldShow);
+    
+    if (!shouldShow) return;
+    
+    const updateMetrics = () => {
+      setMetrics(performanceMonitor.getMetrics());
+    };
+    
+    // Update metrics every 2 seconds
+    const interval = setInterval(updateMetrics, 2000);
+    updateMetrics(); // Initial update
+    
+    return () => clearInterval(interval);
   }, []);
 
   if (!isVisible) return null;
@@ -50,35 +53,35 @@ export default function Analytics() {
       <div className="space-y-2 text-xs">
         <div className="flex justify-between">
           <span className="text-slate-400">FCP:</span>
-          <span className={getScoreColor(metrics.fcp, 1800, 3000)}>
+          <span className={getScoreColor(metrics.fcp, PERFORMANCE_THRESHOLDS.FCP_GOOD, PERFORMANCE_THRESHOLDS.FCP_NEEDS_IMPROVEMENT)}>
             {formatMetric(metrics.fcp)}
           </span>
         </div>
         
         <div className="flex justify-between">
           <span className="text-slate-400">LCP:</span>
-          <span className={getScoreColor(metrics.lcp, 2500, 4000)}>
+          <span className={getScoreColor(metrics.lcp, PERFORMANCE_THRESHOLDS.LCP_GOOD, PERFORMANCE_THRESHOLDS.LCP_NEEDS_IMPROVEMENT)}>
             {formatMetric(metrics.lcp)}
           </span>
         </div>
         
         <div className="flex justify-between">
           <span className="text-slate-400">FID:</span>
-          <span className={getScoreColor(metrics.fid, 100, 300)}>
+          <span className={getScoreColor(metrics.fid, PERFORMANCE_THRESHOLDS.FID_GOOD, PERFORMANCE_THRESHOLDS.FID_NEEDS_IMPROVEMENT)}>
             {formatMetric(metrics.fid)}
           </span>
         </div>
         
         <div className="flex justify-between">
           <span className="text-slate-400">CLS:</span>
-          <span className={getScoreColor(metrics.cls, 0.1, 0.25)}>
+          <span className={getScoreColor(metrics.cls, PERFORMANCE_THRESHOLDS.CLS_GOOD, PERFORMANCE_THRESHOLDS.CLS_NEEDS_IMPROVEMENT)}>
             {metrics.cls !== undefined ? metrics.cls.toFixed(3) : 'N/A'}
           </span>
         </div>
         
         <div className="flex justify-between">
           <span className="text-slate-400">Load Time:</span>
-          <span className={getScoreColor(metrics.loadTime, 3000, 5000)}>
+          <span className={getScoreColor(metrics.loadTime, PERFORMANCE_THRESHOLDS.LOAD_TIME_GOOD, PERFORMANCE_THRESHOLDS.LOAD_TIME_NEEDS_IMPROVEMENT)}>
             {formatMetric(metrics.loadTime)}
           </span>
         </div>

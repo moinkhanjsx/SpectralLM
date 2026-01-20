@@ -1,5 +1,6 @@
 import './App.css'
 import { lazy, Suspense } from 'react'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Preload critical components
 const Navigation = lazy(() => import('./components/Navigation'))
@@ -25,18 +26,36 @@ function LoadingSpinner() {
 export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <Suspense fallback={<LoadingSpinner />}>
-        <div className="app-container max-w-[1200px] flex flex-col justify-center">
-          <Navigation />
-          <Hero />
-          <Industries />
-          <WhyChoose />
-          <Process />
-          <CTA />
-        </div>
-        <Footer />
-        <Analytics />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingSpinner />}>
+          <div className="app-container max-w-[1200px] flex flex-col justify-center">
+            <ErrorBoundary>
+              <Navigation />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Hero />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Industries />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <WhyChoose />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <Process />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <CTA />
+            </ErrorBoundary>
+          </div>
+          <ErrorBoundary>
+            <Footer />
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <Analytics />
+          </ErrorBoundary>
+        </Suspense>
+      </ErrorBoundary>
     </div>
   )
 }

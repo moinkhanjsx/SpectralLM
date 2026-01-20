@@ -10,6 +10,9 @@ export interface PerformanceMetrics {
 class PerformanceMonitor {
   private metrics: Partial<PerformanceMetrics> = {};
   private observers: PerformanceObserver[] = [];
+  private clickHandler: ((event: Event) => void) | null = null;
+  private scrollHandler: (() => void) | null = null;
+  private unloadHandler: (() => void) | null = null;
 
   constructor() {
     this.init();
@@ -123,8 +126,13 @@ class PerformanceMonitor {
   }
 
   private trackUserInteractions() {
-    // Track button clicks and form submissions
-    document.addEventListener('click', (event) => {
+    // Track button clicks and form submissions with throttling
+    let lastClickTime = 0;
+    this.clickHandler = (event: Event) => {
+      const now = Date.now();
+      if (now - lastClickTime < 100) return; // Throttle rapid clicks
+      lastClickTime = now;
+
       const target = event.target as HTMLElement;
       const elementInfo = {
         tagName: target.tagName,
@@ -135,18 +143,22 @@ class PerformanceMonitor {
       };
 
       this.logInteraction('click', elementInfo);
-    });
+    };
 
     // Track scroll depth
     let maxScroll = 0;
-    window.addEventListener('scroll', () => {
+    this.scrollHandler = () => {
       const scrollPercentage = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
       maxScroll = Math.max(maxScroll, scrollPercentage);
-    });
+    };
 
-    window.addEventListener('beforeunload', () => {
+    this.unloadHandler = () => {
       this.logInteraction('scroll_depth', { maxScroll });
-    });
+    };
+
+    document.addEventListener('click', this.clickHandler);
+    window.addEventListener('scroll', this.scrollHandler, { passive: true });
+    window.addEventListener('beforeunload', this.unloadHandler);
   }
 
   private logError(error: any) {
@@ -193,6 +205,17 @@ class PerformanceMonitor {
   // Cleanup method
   public destroy() {
     this.observers.forEach(observer => observer.disconnect());
+    
+    // Clean up event listeners
+    if (this.clickHandler) {
+      document.removeEventListener('click', this.clickHandler);
+    }
+    if (this.scrollHandler) {
+      window.removeEventListener('scroll', this.scrollHandler);
+    }
+    if (this.unloadHandler) {
+      window.removeEventListener('beforeunload', this.unloadHandler);
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
 import { trackCustomEvent } from '../utils/performanceMonitor';
+import { ANALYTICS_EVENTS } from '../constants';
 
 export default function Hero() {
   const [ref, isIntersecting] = useIntersectionObserver({ threshold: 0.1 });
@@ -18,7 +19,7 @@ export default function Hero() {
       <div className="flex flex-col sm:flex-row gap-4 justify-center text-xl border-b border-slate-800">
         <button 
           className="bg-gradient-to-r from-blue-500 to-cyan-500 px-6 py-3 rounded-lg font-bold hover:shadow-lg hover:shadow-blue-500/50 transition text-black flex items-center justify-center gap-2"
-          onClick={() => trackCustomEvent('hero_request_demo', { section: 'hero', button: 'request_demo' })}
+          onClick={() => trackCustomEvent(ANALYTICS_EVENTS.HERO_REQUEST_DEMO, { section: 'hero', button: 'request_demo' })}
         >
           Request Demo
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -27,7 +28,7 @@ export default function Hero() {
         </button>
         <button 
           className="border border-slate-500 px-6 py-3 rounded-lg font-bold hover:bg-slate-800 transition"
-          onClick={() => trackCustomEvent('hero_explore_solutions', { section: 'hero', button: 'explore_solutions' })}
+          onClick={() => trackCustomEvent(ANALYTICS_EVENTS.HERO_EXPLORE_SOLUTIONS, { section: 'hero', button: 'explore_solutions' })}
         >
           Explore Solutions
         </button>
